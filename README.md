@@ -1,75 +1,53 @@
-🔊 Speaker Cleaner
+# 🔊 Speaker Cleaner
 
 A Windows desktop application that generates controlled audio patterns to help clear moisture and loose debris from speaker openings.
 
-This is my first desktop application, built to learn and experiment with Rust, Tauri, React, and programmatic audio generation.
+This is my first desktop application, built to learn and experiment with **Rust, Tauri, React, and programmatic audio generation**.
 
-Speaker Cleaner does not guarantee removal of water or physical debris and is not a replacement for hardware repair.
+> Speaker Cleaner does not guarantee removal of water or physical debris and is not a replacement for hardware repair.
 
-✨ Features
+## ✨ Features
 
-🖥️ Windows desktop application
+- 🖥️ Windows desktop application
+- 🔊 Programmatically generated cleaning audio
+- 💧 Low-frequency water-ejection pattern
+- 🌊 Controlled frequency sweep
+- 🎵 Multi-stage deep cleaning sequence
+- ⏱️ Real-time cleaning timer and progress
+- 📊 Current cleaning pattern and frequency information
+- 🛑 Dedicated cleaning session with a Stop control
+- 🎧 Support for laptop speakers, external/normal speakers, and AirPods/earbuds
+- ⚡ No external MP3 files required
+- 🔒 UI controls are locked while cleaning is active
+- 🦀 Rust-powered audio backend
+- ⚛️ React frontend
+- 🪟 Tauri desktop runtime
 
-🔊 Programmatically generated cleaning audio
+## 🛠️ Tech Stack
 
-💧 Low-frequency water-ejection pattern
+### Frontend
+- React
+- Vite
+- JavaScript / TypeScript
+- HTML / CSS
 
-🌊 Controlled frequency sweep
+### Desktop
+- Tauri 2
 
-🎵 Multi-stage deep cleaning sequence
+### Backend
+- Rust
+- Rodio
 
-⏱️ Real-time cleaning timer and progress
+### Serialization / Error Handling
+- Serde
+- Serde JSON
+- Thiserror
 
-📊 Current cleaning pattern and frequency information
-
-🛑 Dedicated cleaning session with a Stop control
-
-🎧 Support for laptop speakers, external/normal speakers, and AirPods/earbuds
-
-⚡ No external MP3 files required
-
-🔒 UI controls are locked while cleaning is active
-
-🦀 Rust-powered audio backend
-
-⚛️ React frontend
-
-🪟 Tauri desktop runtime
-
-🛠️ Tech Stack
-
-Frontend
-
-React
-
-Vite
-
-JavaScript / TypeScript
-
-HTML / CSS
-
-Desktop
-
-Tauri 2
-
-Backend
-
-Rust
-
-Rodio
-
-Serialization / Error Handling
-
-Serde
-
-Serde JSON
-
-Thiserror
-
-🧠 How It Works
+## 🧠 How It Works
 
 Speaker Cleaner does not rely on downloaded audio files. The cleaning sounds are generated directly by the Rust backend using audio signal generators.
 
+```text
 React Frontend
       │
       │ Tauri Commands / Events
@@ -91,71 +69,84 @@ AudioEngine
                     │
                     ▼
               Rodio / Audio Output
+```
 
-🎚️ Cleaning Modes
+## 🎚️ Cleaning Modes
 
-Quick
+### Quick
+**Duration:** 30 seconds
 
-Duration: 30 seconds
-
+```text
 Water Eject
+```
 
 A short, controlled low-frequency sequence.
 
-Balanced
+### Balanced
+**Duration:** 50 seconds
 
-Duration: 50 seconds
-
+```text
 Water Eject
       ↓
 Dust Sweep
+```
 
 Combines the low-frequency pulse sequence with a controlled frequency sweep.
 
-Deep
+### Deep
+**Duration:** 80 seconds
 
-Duration: 80 seconds
-
+```text
 Water Eject
       ↓
 Dust Sweep
       ↓
 Full Spectrum
+```
 
 Deep mode uses multiple controlled stages rather than simply increasing the volume.
 
-🎵 Audio Generation
+## 🎵 Audio Generation
 
 The application generates audio samples programmatically in Rust.
 
 The audio sources operate at:
 
+```text
 44,100 Hz
+```
 
-Water Eject
+### Water Eject
 
 The water-ejection pattern uses a fundamental frequency around:
 
+```text
 165 Hz
+```
 
 It also contains controlled harmonics and a pulsed envelope.
 
+```text
 Fundamental
 +
 2nd harmonic
 +
 3rd harmonic
+```
 
 The fundamental remains dominant while harmonic components are kept at lower levels.
 
-Dust Sweep
+### Dust Sweep
 
 The dust sweep uses a logarithmic frequency sweep approximately covering:
 
+```text
 200 Hz → 4000 Hz
+```
 
 The oscillator uses phase accumulation so that the phase remains continuous while the frequency changes.
 
+```text
 200 Hz
   ↓
   ↓
@@ -163,13 +154,15 @@ The oscillator uses phase accumulation so that the phase remains continuous whil
   ↓
   ↓
 4000 Hz
+```
 
 The sweep also uses controlled harmonics and a pulsed envelope.
 
-Full Spectrum
+### Full Spectrum
 
 Deep cleaning uses a staged frequency sequence:
 
+```text
 Stage 1:
 120 Hz → 300 Hz
 
@@ -181,39 +174,43 @@ Stage 3:
 
 Stage 4:
 3000 Hz → 180 Hz
+```
 
 Each stage uses frequency sweep, controlled harmonic content, pulsed amplitude, and smooth attack/release envelopes.
 
 The goal is to avoid simply producing one extremely loud signal.
 
-🔬 Signal Processing
+## 🔬 Signal Processing
 
-Phase Accumulation
+### Phase Accumulation
 
 Frequency sweeps update oscillator phase sample-by-sample:
 
+```text
 phase += 2π × frequency / sample_rate
+```
 
 This helps prevent unnecessary phase discontinuities during frequency changes.
 
-Smooth Envelopes
+### Smooth Envelopes
 
 Attack and release envelopes are applied to avoid abrupt starts and stops.
 
-Pulsed Signals
+### Pulsed Signals
 
 Cleaning patterns use controlled pulse cycles rather than continuously playing the signal at the same level.
 
-Harmonic Control
+### Harmonic Control
 
 Additional harmonics are mixed at lower amplitudes instead of generating multiple equally loud frequencies.
 
-Headroom
+### Headroom
 
 The generated signals use conservative amplitudes to reduce the possibility of digital clipping.
 
-🖥️ Application Flow
+## 🖥️ Application Flow
 
+```text
 Open Application
       ↓
 Select Device
@@ -233,37 +230,34 @@ Timer + Progress + Frequency
 Stop / Complete
       ↓
 Completion Screen
+```
 
 During an active cleaning session, configuration controls are locked so the user cannot accidentally change the device or cleaning mode while audio is playing.
 
-🎧 Supported Devices
+## 🎧 Supported Devices
 
-Laptop Speakers
-
+### Laptop Speakers
 Designed for built-in laptop speakers.
 
-External Speakers
-
+### External Speakers
 Can be used with speakers connected through:
-
-AUX
-
-USB
-
-Bluetooth
+- AUX
+- USB
+- Bluetooth
 
 The application uses the current Windows audio output.
 
-AirPods / Earbuds
+### AirPods / Earbuds
 
 AirPods and other earbuds can be used as the selected output device.
 
-Important: Remove earbuds from your ears before starting a cleaning sequence.
+**Important:** Remove earbuds from your ears before starting a cleaning sequence.
 
 Cleaning tones are not intended to be played directly into the ears.
 
-📁 Project Structure
+## 📁 Project Structure
 
+```text
 speaker-cleaner/
 │
 ├── src/
@@ -282,108 +276,112 @@ speaker-cleaner/
 ├── package.json
 ├── vite.config.*
 └── README.md
+```
 
-⚙️ Requirements
+## ⚙️ Requirements
 
 To build the application from source:
 
-Windows
+- Windows
+- Node.js
+- Rust
+- Cargo
+- Tauri CLI
 
-Node.js
-
-Rust
-
-Cargo
-
-Tauri CLI
-
-🚀 Installation
+## 🚀 Installation
 
 Clone the repository:
 
+```bash
 git clone https://github.com/ANURODHOP/speaker-cleaner.git
+```
 
 Enter the project:
 
+```bash
 cd speaker-cleaner
+```
 
 Install frontend dependencies:
 
+```bash
 npm install
+```
 
 Check the Rust backend:
 
+```bash
 cargo check --manifest-path src-tauri/Cargo.toml
+```
 
-▶️ Development
+## ▶️ Development
 
 Run the application in development mode:
 
+```bash
 npm run tauri dev
+```
 
 Or:
 
+```bash
 npx tauri dev
+```
 
-🏗️ Build
+## 🏗️ Build
 
 Build the frontend:
 
+```bash
 npm run build
+```
 
 Build the production desktop application:
 
+```bash
 npm run tauri build
+```
 
-🧪 Testing
+## 🧪 Testing
 
-Rust
+### Rust
 
+```bash
 cargo check --manifest-path src-tauri/Cargo.toml
+```
 
-Frontend
+### Frontend
 
+```bash
 npm run build
+```
 
-Desktop Application
+### Desktop Application
 
+```bash
 npx tauri dev
+```
 
 Manual checks should include:
 
-Application launches
+- Application launches
+- Frontend loads correctly
+- Device selection works
+- Cleaning mode selection works
+- Quick cleaning works
+- Balanced cleaning works
+- Deep cleaning works
+- Audio actually plays
+- Timer updates
+- Progress updates
+- Frequency information updates correctly
+- Stop button stops playback
+- Controls unlock after stopping
+- Natural completion works
+- Completion screen appears
+- AirPods/earbuds warning appears
 
-Frontend loads correctly
-
-Device selection works
-
-Cleaning mode selection works
-
-Quick cleaning works
-
-Balanced cleaning works
-
-Deep cleaning works
-
-Audio actually plays
-
-Timer updates
-
-Progress updates
-
-Frequency information updates correctly
-
-Stop button stops playback
-
-Controls unlock after stopping
-
-Natural completion works
-
-Completion screen appears
-
-AirPods/earbuds warning appears
-
-⚠️ Safety
+## ⚠️ Safety
 
 Speaker Cleaner is intended as a software experiment and audio utility.
 
@@ -395,91 +393,68 @@ If a device has significant water exposure, especially if water may have reached
 
 The application cannot guarantee removal of water, dust, or physical debris.
 
-🔮 Future Improvements
+## 🔮 Future Improvements
 
 Possible future improvements include:
 
-Better Windows output-device detection
+- Better Windows output-device detection
+- Device-specific audio profiles
+- More specialized cleaning sequences
+- Better frequency visualization
+- More precise real-time frequency reporting
+- More testing across different laptop speakers
+- More testing across Bluetooth speakers
+- Better AirPods / earbud channel handling
+- Left/right channel controls
+- Additional cleaning profiles
+- Improved audio calibration
+- More robust stop/restart handling
+- Improved error reporting
+- Installer and automatic updates
+- Performance improvements
+- More extensive automated testing
 
-Device-specific audio profiles
-
-More specialized cleaning sequences
-
-Better frequency visualization
-
-More precise real-time frequency reporting
-
-More testing across different laptop speakers
-
-More testing across Bluetooth speakers
-
-Better AirPods / earbud channel handling
-
-Left/right channel controls
-
-Additional cleaning profiles
-
-Improved audio calibration
-
-More robust stop/restart handling
-
-Improved error reporting
-
-Installer and automatic updates
-
-Performance improvements
-
-More extensive automated testing
-
-🎯 Project Goals
+## 🎯 Project Goals
 
 The main goals of this project are:
 
-Learn desktop application development.
+1. Learn desktop application development.
+2. Learn how Tauri connects a web frontend with Rust.
+3. Experiment with programmatic audio generation.
+4. Understand real-time audio playback.
+5. Build a practical application instead of a simple tutorial project.
+6. Improve the application through real testing and iteration.
 
-Learn how Tauri connects a web frontend with Rust.
+## 📌 Current Status
 
-Experiment with programmatic audio generation.
-
-Understand real-time audio playback.
-
-Build a practical application instead of a simple tutorial project.
-
-Improve the application through real testing and iteration.
-
-📌 Current Status
-
-Early working version
+**Early working version**
 
 The core desktop application and programmatic audio engine are implemented.
 
 The project is still being improved, especially around:
 
-UI/UX
+- UI/UX
+- Device handling
+- Audio profiles
+- Testing
+- Frequency reporting
+- Cross-device behavior
 
-Device handling
+## 👨‍💻 Author
 
-Audio profiles
+**Anurodh Prasai**
 
-Testing
-
-Frequency reporting
-
-Cross-device behavior
-
-👨‍💻 Author
-
-Anurodh Prasai
-
-GitHub:
+GitHub:  
 https://github.com/ANURODHOP
 
-📄 License
+## 📄 License
 
 Add your preferred license here.
 
 For example:
 
+```text
 MIT License
+```
 
 if you decide to release the project under MIT.
