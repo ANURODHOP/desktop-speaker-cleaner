@@ -1,0 +1,30 @@
+# Node.js
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Tauri / Rust
+target/
+src-tauri/target/
+
+# OS Files
+.DS_Store
+Thumbs.db
+*.exe
+*.stackdump
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Windows reserved files
+nul
+speaker-cleaner/nul
